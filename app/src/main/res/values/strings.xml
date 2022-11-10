@@ -52,4 +52,6 @@
     <dimen name="margin_extra_extra_small">7dp</dimen>
     <dimen name="radius_default">8dp</dimen>
     <dimen name="padding_small">8dp</dimen>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

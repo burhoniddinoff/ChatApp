@@ -1,8 +1,6 @@
 package com.example.chatapp.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.chatapp.R
 import com.example.chatapp.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -17,6 +15,7 @@ class LoginActivity: BaseActivity() {
         binding.registerButton.click {
             intent(this, RegisterActivity())
         }
+
         binding.loginButton.click {
             val email = binding.emailEditText.text.toString().trim()
             val password = binding.passwordEditText.text.toString().trim()
