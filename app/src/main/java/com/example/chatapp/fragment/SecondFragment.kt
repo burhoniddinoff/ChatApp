@@ -32,6 +32,7 @@ class SecondFragment : Fragment() {
     private val dbRef by lazy { FirebaseDatabase.getInstance().reference }
     private var senderRoom: String? = null
     private var receiveRoom: String? = null
+    private lateinit var linearLayoutManager: LinearLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,8 +52,9 @@ class SecondFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val uid = auth.currentUser?.uid!!
         (activity as MainActivity).supportActionBar?.title = user?.name
+        linearLayoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = linearLayoutManager
             adapter = messageAdapter
         }
         senderRoom = user?.uid + uid
@@ -64,23 +66,23 @@ class SecondFragment : Fragment() {
             if (text.isNotBlank()) {
                 val time = DateFormat.format("HH:mm:ss", Date().time)
                 val message = Message(text, uid, time.toString())
-                messageAdapter.notifyDataSetChanged()
                 dbRef.child("chats/$senderRoom/messages").push()
                     .setValue(message).addOnSuccessListener {
                         dbRef.child("chats/$receiveRoom/messages").push()
                             .setValue(message)
                     }
                 binding.editText.setText("")
+                (binding.recyclerView.layoutManager as LinearLayoutManager).scrollToPosition(messageAdapter.itemCount-1)
             }
         }
     }
 
     private fun chatMessages(senderRoom: String) {
-        messageList.clear()
         dbRef.child("chats/$senderRoom/messages").addValueEventListener(object :
             ValueEventListener {
             @SuppressLint("NotifyDataSetChanged")
             override fun onDataChange(snapshot: DataSnapshot) {
+                messageList.clear()
                 for (message in snapshot.children) {
                     messageList.add(message.getValue(Message::class.java)!!)
                 }
